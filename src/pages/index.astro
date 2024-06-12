@@ -2,6 +2,8 @@
 import { getCollection } from "astro:content";
 
 const allLines = await getCollection("lines");
+const groups = Object.groupBy(allLines, (line) => line.data.category);
+const entries = Object.entries(groups).sort(([a], [b]) => a.localeCompare(b));
 ---
 
 <html lang="en">
@@ -13,10 +15,45 @@ const allLines = await getCollection("lines");
 		<title>Astro</title>
 	</head>
 	<body>
+		<h1>1LOC (this is a work in progress)</h1>
+
+		<p>
+			This website will try to mimic the original 1loc.dev until it was
+			moved to https://phuoc.ng/collection/1-loc/
+		</p>
+
 		<ul>
-			{allLines.map((line) => <li>
-				<a href={line.slug}>{line.data.title}</a>
-			</li>)}
+			<li>
+				<strong>
+					<a href="https://github.com/iamandrewluca/1loc.js.org"
+						>github.com/iamandrewluca/1loc.js.org</a
+					>
+				</strong>
+			</li>
+			<li>
+				<strong>
+					<a href="https://github.com/iamandrewluca/1loc"
+						>github.com/iamandrewluca/1loc</a
+					>
+				</strong>
+			</li>
 		</ul>
+
+		<hr />
+
+		{
+			entries.map(([category, lines = []]) => (
+				<>
+					<h2>{category}</h2>
+					<ul>
+						{lines.map((line) => (
+							<li>
+								<a href={line.slug}>{line.data.title}</a>
+							</li>
+						))}
+					</ul>
+				</>
+			))
+		}
 	</body>
 </html>
